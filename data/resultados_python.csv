@@ -1,0 +1,10 @@
+linguagem,caso,n,media_us,desvio_us
+Python,melhor,1000,77.3233,13.0726
+Python,melhor,10000,782.9767,79.0426
+Python,melhor,100000,7851.2367,284.8487
+Python,medio,1000,77.6033,14.8528
+Python,medio,10000,779.99,48.6448
+Python,medio,100000,7786.4633,316.21
+Python,pior,1000,90.3233,11.2737
+Python,pior,10000,947.8967,162.3163
+Python,pior,100000,10714.5267,345.3875

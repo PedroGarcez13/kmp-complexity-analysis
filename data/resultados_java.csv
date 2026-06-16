@@ -1,0 +1,10 @@
+linguagem,caso,n,media_us,desvio_us
+Java,melhor,1000,20.9767,3.6415
+Java,melhor,10000,48.2300,11.6755
+Java,melhor,100000,111.3267,42.1356
+Java,medio,1000,7.4100,6.8149
+Java,medio,10000,58.9700,15.7621
+Java,medio,100000,231.0367,10.9794
+Java,pior,1000,1.4433,0.0626
+Java,pior,10000,14.4000,1.7815
+Java,pior,100000,135.5067,10.7184
