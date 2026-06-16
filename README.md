@@ -10,15 +10,16 @@ em **Python** e **Java**.
 
 ```
 kmp-complexity-analysis/
-├── python/
-│   └── kmp.py               # Implementação + experimentos Python
-├── java/
-│   └── KMP.java             # Implementação + experimentos Java
-├── data/                    # CSVs gerados automaticamente
-├── graficos/                # Imagens geradas automaticamente
-├── relatorio/               # PDF do relatório
-├── slides/                  # Slides da apresentação
-├── graficos.py              # Script de geração de gráficos
+├── 📁 data/
+├── 📁 graficos/
+├── 📁 java/
+│   └── KMP.java
+├── 📁 python/
+│   └── kmp.py
+├── 📁 relatorio/
+├── 📁 slides/
+├── .gitignore        ← bônus, não estava no plano original
+├── graficos.py
 └── README.md
 ```
 
