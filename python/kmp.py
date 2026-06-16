@@ -151,58 +151,56 @@ CASOS = {
     'pior'  : gerar_pior_caso,
 }
 
-print("=" * 68)
-print("  KMP – Experimentos em Python")
-print(f"  Tamanhos: {TAMANHOS}  |  Rodadas: {RODADAS}  |  Aquecimento: {AQUECIMENTO}")
-print("=" * 68)
 
-resultados = []
+def executar_experimentos() -> list[dict]:
+    """Roda todos os cenários e retorna a lista de resultados."""
+    print("=" * 68)
+    print("  KMP – Experimentos em Python")
+    print(f"  Tamanhos: {TAMANHOS}  |  Rodadas: {RODADAS}  |  Aquecimento: {AQUECIMENTO}")
+    print("=" * 68)
 
-for nome_caso, gerador in CASOS.items():
-    for n in TAMANHOS:
-        m = max(1, int(n * RAZAO_M))
+    resultados = []
 
-        # Aquecimento: garante que o interpretador já compilou o bytecode
-        for _ in range(AQUECIMENTO):
-            t, p = gerador(n, m)
-            kmp_busca(t, p)
+    for nome_caso, gerador in CASOS.items():
+        for n in TAMANHOS:
+            m = max(1, int(n * RAZAO_M))
 
-        # Coleta de tempos (30 rodadas)
-        tempos = []
-        for _ in range(RODADAS):
-            texto, padrao = gerador(n, m)
-            inicio = time.perf_counter()
-            kmp_busca(texto, padrao)
-            fim    = time.perf_counter()
-            tempos.append((fim - inicio) * 1_000_000)   # segundos → µs
+            # Aquecimento: garante que o interpretador já compilou o bytecode
+            for _ in range(AQUECIMENTO):
+                t, p = gerador(n, m)
+                kmp_busca(t, p)
 
-        media  = float(np.mean(tempos))
-        desvio = float(np.std(tempos, ddof=1))          # desvio-padrão amostral
+            # Coleta de tempos (30 rodadas)
+            tempos = []
+            for _ in range(RODADAS):
+                texto, padrao = gerador(n, m)
+                inicio = time.perf_counter()
+                kmp_busca(texto, padrao)
+                fim    = time.perf_counter()
+                tempos.append((fim - inicio) * 1_000_000)   # segundos → µs
 
-        resultados.append({
-            'linguagem': 'Python',
-            'caso'     : nome_caso,
-            'n'        : n,
-            'media_us' : round(media, 4),
-            'desvio_us': round(desvio, 4),
-        })
+            media  = float(np.mean(tempos))
+            desvio = float(np.std(tempos, ddof=1))          # desvio-padrão amostral
 
-        print(f"  {nome_caso:7s} | n={n:7d} | m={m:5d} | "
-              f"média={media:9.2f} µs | dp={desvio:7.2f} µs")
+            resultados.append({
+                'linguagem': 'Python',
+                'caso'     : nome_caso,
+                'n'        : n,
+                'media_us' : round(media, 4),
+                'desvio_us': round(desvio, 4),
+            })
 
-print()
+            print(f"  {nome_caso:7s} | n={n:7d} | m={m:5d} | "
+                  f"média={media:9.2f} µs | dp={desvio:7.2f} µs")
 
-# =============================================================================
-# SALVAR CSV
-# =============================================================================
+    print()
+    return resultados
 
-os.makedirs('../data', exist_ok=True)
-caminho_csv = '../data/resultados_python.csv'
 
-with open(caminho_csv, 'w', newline='', encoding='utf-8') as f:
-    campos  = ['linguagem', 'caso', 'n', 'media_us', 'desvio_us']
-    escritor = csv.DictWriter(f, fieldnames=campos)
-    escritor.writeheader()
-    escritor.writerows(resultados)
+def salvar_csv(resultados: list[dict]) -> None:
+    """Salva os resultados em ../data/resultados_python.csv."""
+    os.makedirs('../data', exist_ok=True)
+    caminho_csv = '../data/resultados_python.csv'
 
-print(f"✓ CSV salvo em {caminho_csv}")
+    with open(caminho_csv, 'w', newline='', encoding='utf-8') as f:
+        ca
