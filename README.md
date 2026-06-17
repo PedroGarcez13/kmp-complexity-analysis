@@ -1,6 +1,6 @@
 # KMP – Análise de Complexidade de Tempo
 
-Projeto da disciplina **Teoria da Computação**.  
+Projeto da disciplina **Teoria da Computação**.
 Implementação e análise experimental do algoritmo **Knuth-Morris-Pratt (KMP)**
 em **Python** e **Java**.
 
@@ -10,18 +10,23 @@ em **Python** e **Java**.
 
 ```
 kmp-complexity-analysis/
-├── 📁 data/                # CSVs gerados automaticamente
-├── 📁 graficos/            # Imagens geradas automaticamente
-├── 📁 java/
-│   └── KMP.java            # Implementação + experimentos Java
-├── 📁 python/
-│   └── kmp.py              # Implementação + experimentos Python
-├── 📁 relatorio/           # PDF do relatório
-├── 📁 slides/              # Slides da apresentação
-├── .gitignore        
-├── graficos.py             # Script de geração de gráficos
+├── python/
+│   ├── kmp.py               # Algoritmo puro (LPS + busca)
+│   ├── gerar_entradas.py    # Geração determinística das entradas
+│   └── benchmark.py         # Medição de tempo + CSVs (CLI)
+├── java/
+│   ├── KMP.java             # Algoritmo puro (LPS + busca)
+│   └── BenchmarkKMP.java    # Medição de tempo + CSVs
+├── data/                    # CSVs (resumo + medições brutas)
+├── graficos/                # Imagens geradas
+├── relatorio/               # PDF do relatório
+├── slides/                  # Slides da apresentação
+├── graficos.py              # Geração dos gráficos
 └── README.md
 ```
+
+O código é **modular**: o algoritmo (`kmp.py` / `KMP.java`) é separado da geração
+de entradas e da medição de tempo, facilitando reuso e teste.
 
 ---
 
@@ -31,9 +36,7 @@ kmp-complexity-analysis/
 |------------|--------------|
 | Python     | 3.10+        |
 | Java (JDK) | 17+          |
-| pip        | qualquer     |
 
-Instalar dependências Python (apenas uma vez):
 ```bash
 pip install numpy pandas matplotlib
 ```
@@ -42,32 +45,27 @@ pip install numpy pandas matplotlib
 
 ## Como executar
 
-### 1. Rodar experimentos em Python
-```bash
-cd python
-python kmp.py
-```
-Saída: `../data/resultados_python.csv`
+Todos os comandos são executados **a partir da raiz do projeto**.
 
-### 2. Rodar experimentos em Java
+### 1. Benchmark em Python
 ```bash
-cd java
-javac KMP.java
-java KMP
+python python/benchmark.py --runs 30
 ```
-Saída: `../data/resultados_java.csv`
+Saídas: `data/resultados_python.csv` (resumo) e `data/resultados_python_raw.csv` (bruto).
+
+### 2. Benchmark em Java
+```bash
+javac java/KMP.java java/BenchmarkKMP.java
+java -cp java BenchmarkKMP 30
+```
+Saídas: `data/resultados_java.csv` (resumo) e `data/resultados_java_raw.csv` (bruto).
 
 ### 3. Gerar os gráficos
-*(executar na raiz do projeto, após os dois passos acima)*
 ```bash
-cd ..
 python graficos.py
 ```
-Saída em `graficos/`:
-- `kmp_python_casos.png`
-- `kmp_java_casos.png`
-- `kmp_python_vs_java.png`
-- `kmp_loglog.png`
+Saída em `graficos/`: `kmp_python_casos.png`, `kmp_java_casos.png`,
+`kmp_python_vs_java.png`, `kmp_loglog.png`.
 
 ---
 
@@ -82,23 +80,7 @@ Saída em `graficos/`:
 | Medição de tempo | `time.perf_counter()` (Python) · `System.nanoTime()` (Java) |
 | Estatísticas | Média e desvio-padrão amostral |
 
-### Definição dos casos
-
-| Caso | Texto | Padrão | Comportamento |
-|------|-------|--------|---------------|
-| Melhor | `'a' * n` | `'b' + 'a'*(m-1)` | 1 comparação por posição; LPS nunca consultada |
-| Pior | `'a' * n` | `'a'*(m-1) + 'b'` | ≈ 2n comparações; retrocesso máximo na LPS |
-| Médio | aleatório | aleatório | distribuição uniforme sobre alfabeto de 10 letras |
-
----
-
-## Complexidade do KMP
-
-| Fase | Complexidade |
-|------|-------------|
-| Pré-processamento (LPS) | O(m) |
-| Busca | O(n) |
-| **Total** | **O(n + m)** |
-
-O KMP é sempre **O(n + m)** nos três casos — melhor, médio e pior.
-A diferença experimental reflete apenas a constante multiplicativa.
+**Entradas determinísticas e idênticas entre linguagens.** O caso médio é gerado
+por um LCG (gerador linear congruente) com a mesma fórmula e as mesmas sementes em
+Python e Java, de modo que as duas implementações rodem sobre **exatamente as mesmas
+entradas** — tornando a comparação entre lingua
